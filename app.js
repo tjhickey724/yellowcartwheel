@@ -19,8 +19,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
+app.get('/', function(req, res, next) {
+  res.render('index',{title:"Express Demo"});
+});
+
+app.get('/griddemo', function(req, res, next) {
+  res.render('griddemo',{title:"Grid Demo"});
+});
+// app.use('/', indexRouter);  // this is how we use a router to handle the / path
+// but here we are more direct
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

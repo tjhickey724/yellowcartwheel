@@ -1,0 +1,14 @@
+<%- include('bootheader') -%>
+<%- include('menubar') -%>
+    <div class="jumbotron">
+        <h1>Global Webpage Comment Form</h1>
+        <p>add comments to any page on the web ...</p>
+    </div>
+
+    <form method="post" action="/processform">
+      URL: <input type="text" name="url"> <br>
+      comments: <textarea name="theComments"></textarea>
+      <input type="submit">
+    </form>
+
+<%- include('bootfooter') -%>

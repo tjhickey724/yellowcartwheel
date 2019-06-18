@@ -8,7 +8,11 @@
     <form method="post" action="/processform">
       URL: <input type="text" name="url"> <br>
       comments: <textarea name="comment"></textarea>
+      <% if (loggedIn) { %>
       <input type="submit">
+      <% } else { %>
+        You must be logged in to submit form info.
+        <% } %>
     </form>
 
 <%- include('bootfooter') -%>

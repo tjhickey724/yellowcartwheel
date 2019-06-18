@@ -191,7 +191,7 @@ app.get('/showComments', commentController.getAllComments)
 // app.use('/', indexRouter);  // this is how we use a router to handle the / path
 // but here we are more direct
 
-
+app.get('/showComment/:id', commentController.getOneComment)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -5,7 +5,7 @@
     </div>
     <ol>
     <% for(i = 0; i<comments.length; i++){  %>
-        <li> <a href="<%= comments[i].url %>">
+        <li> <a href="/showComment/<%= comments[i]._id %>">
               <%= comments[i].url %></a>
               <i>
              <%= comments[i].comment %></\/i> </li>

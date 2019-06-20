@@ -9,6 +9,14 @@
             You are logged in to YellowCartwheel.
         </p>
         <p> Last updated on <%= user.lastUpdate %> </p>
+        <hr>
+        <form method="post" action="/updateProfile">
+            userName: <input type="text" name="userName" value="<%= user.userName %>"><br>
+            profilePicURL: <input type="text" name="profilePicURL"
+                              value="<%= user.profilePicURL %>"><br>
+            <input type="submit" class="btn btn-lg btn-primary">
+        </form>
+
 
     </div>
 

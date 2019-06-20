@@ -20,6 +20,7 @@ db.once('open', function() {
 });
 
 const commentController = require('./controllers/commentController')
+const profileController = require('./controllers/profileController')
 
 // Authentication
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
@@ -150,6 +151,15 @@ function isLoggedIn(req, res, next) {
 app.get('/profile', isLoggedIn, function(req, res) {
         res.render('profile')
     });
+
+app.get('/editProfile',isLoggedIn, (req,res)=>{
+  res.render('editProfile')
+})
+
+app.post('/updateProfile',profileController.update)
+
+// add page for editProfile and views
+// add router for updateProfile and send browser to /profie
 
 // END OF THE AUTHENTICATION ROUTES
 

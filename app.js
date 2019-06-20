@@ -63,31 +63,12 @@ app.use((req,res,next) => {
   res.locals.title="YellowCartwheel"
   res.locals.loggedIn = false
   if (req.isAuthenticated()){
-    if (req.user.googleemail.endsWith("@brandeis.edu") ||
-          approvedLogins.includes(req.user.googleemail))
-          {
-            console.log("user has been Authenticated")
-            res.locals.user = req.user
-            res.locals.loggedIn = true
-          }
-    else {
-      res.locals.loggedIn = false
+      console.log("user has been Authenticated")
+      res.locals.user = req.user
+      res.locals.loggedIn = true
     }
-    console.log('req.user = ')
-    console.dir(req.user)
-    // here is where we can handle whitelisted logins ...
-    if (req.user){
-      if (req.user.googleemail=='tjhickey@brandeis.edu'){
-        console.log("Owner has logged in")
-        res.locals.status = 'teacher'
-      } else if (taList.includes(req.user.googleemail)){
-        console.log("A TA has logged in")
-        res.locals.status = 'ta'
-      }else {
-        console.log('student has logged in')
-        res.locals.status = 'student'
-      }
-    }
+  else {
+    res.locals.loggedIn = false
   }
   next()
 })
@@ -155,6 +136,10 @@ app.get('/profile', isLoggedIn, function(req, res) {
 app.get('/editProfile',isLoggedIn, (req,res)=>{
   res.render('editProfile')
 })
+
+app.get('/profiles', isLoggedIn, profileController.getAllProfiles);
+app.get('/showProfile/:id', isLoggedIn, profileController.getOneProfile);
+
 
 app.post('/updateProfile',profileController.update)
 

@@ -18,3 +18,42 @@ exports.update = ( req, res ) => {
 
   })
 };
+
+exports.getAllProfiles = ( req, res ) => {
+  //gconsle.log('in getAllSkills')
+  User.find()
+    .exec()
+    .then( ( profiles ) => {
+      res.render( 'profiles', {
+        profiles:profiles, title:"Profiles"
+      } );
+    } )
+    .catch( ( error ) => {
+      console.log( error.message );
+      return [];
+    } )
+    .then( () => {
+      //console.log( 'skill promise complete' );
+    } );
+};
+
+// this displays all of the skills
+exports.getOneProfile = ( req, res ) => {
+  //gconsle.log('in getAllSkills')
+  const id = req.params.id
+  console.log('the id is '+id)
+  User.findOne({_id:id})
+    .exec()
+    .then( ( profile ) => {
+      res.render( 'showProfile', {
+        profile:profile, title:"Profile"
+      } );
+    } )
+    .catch( ( error ) => {
+      console.log( error.message );
+      return [];
+    } )
+    .then( () => {
+      //console.log( 'skill promise complete' );
+    } );
+};

@@ -148,9 +148,7 @@ function isLoggedIn(req, res, next) {
 
 // we require them to be logged in to see their profile
 app.get('/profile', isLoggedIn, function(req, res) {
-        res.render('profile')/*, {
-            user : req.user // get the user out of session and pass to template
-        });*/
+        res.render('profile')
     });
 
 // END OF THE AUTHENTICATION ROUTES

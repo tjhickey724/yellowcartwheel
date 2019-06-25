@@ -11,8 +11,9 @@
       <br>
       <input type="submit">
     </form>
-
+    <hr>
     <form method="post" action="/forumDelete">
+        <input type="submit" value="delete marked">
         <ol>
         <% for(i = 0; i<posts.length; i++){  %>
             <li> <a href="/showPost/<%= posts[i]._id %>">
@@ -23,12 +24,12 @@
                  <% if (posts[i].userId.equals(user._id)) { %>
                      <input type="checkbox" name="delete" value="<%= posts[i]._id %>">
                  <% } %>
-                 <%= posts[i].post %>
+                 <pre><%= posts[i].post %></pre>
 
              </li>
         <% } %>
         </ol>
-        <input type="submit" value="delete marked">
+
     </form>
 
 <%- include('bootfooter') -%>

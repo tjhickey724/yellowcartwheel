@@ -11,15 +11,24 @@
       <br>
       <input type="submit">
     </form>
-    <ol>
-    <% for(i = 0; i<posts.length; i++){  %>
-        <li> <a href="/showPost/<%= posts[i]._id %>">
-              <%= posts[i].userName %></a>
-              <i>
-             <%= posts[i].createdAt %></\/i> <br>
-             <%= posts[i].post %>
-         </li>
-    <% } %>
-    </ol>
+
+    <form method="post" action="/forumDelete">
+        <ol>
+        <% for(i = 0; i<posts.length; i++){  %>
+            <li> <a href="/showPost/<%= posts[i]._id %>">
+                  <%= posts[i].userName %></a>
+                  <i>
+                 <%= posts[i].createdAt %></\/i> <br>
+                 <% console.dir([posts[i].userId,user._id]) %>
+                 <% if (posts[i].userId.equals(user._id)) { %>
+                     <input type="checkbox" name="delete" value="<%= posts[i]._id %>">
+                 <% } %>
+                 <%= posts[i].post %>
+
+             </li>
+        <% } %>
+        </ol>
+        <input type="submit" value="delete marked">
+    </form>
 
 <%- include('bootfooter') -%>

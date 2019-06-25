@@ -167,6 +167,10 @@ app.get('/forum',forumPostController.getAllForumPosts)
 
 app.post('/forum',forumPostController.saveForumPost)
 
+app.post('/forumDelete',forumPostController.deleteForumPost)
+
+
+
 app.get('/griddemo', function(req, res, next) {
   res.render('griddemo',{title:"Grid Demo"});
 });
@@ -174,7 +178,7 @@ app.get('/griddemo', function(req, res, next) {
 
 
 app.get('/bmidemo', (req, res) => {
-  res.render('bmidemo',{title:"Grid Demo"});
+  res.render('bmidemo',{title:"BMI Demo"});
 });
 
 

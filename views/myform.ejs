@@ -13,22 +13,5 @@
       <input type="submit">
     </form>
 
-<hr>
-<h1>BMI Calculator</h1>
-<br> <input type="text" id="height">H<br>
-<input type="text" id="weight">W<br>
-<input type="text" id="BMI">BMI<br>
-
-      <button onClick="calc()">Calc</button>
-
-    <script>
-      function calc(){
-        var h = document.getElementById('height')
-        var w = document.getElementById('weight')
-        var bmi = document.getElementById('BMI')
-
-        bmi.value = 703*w.value/(h.value*h.value)
-      }
-    </script>
 
 <%- include('bootfooter') -%>

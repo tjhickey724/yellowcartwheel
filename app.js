@@ -23,6 +23,7 @@ db.once('open', function() {
 
 const commentController = require('./controllers/commentController')
 const profileController = require('./controllers/profileController')
+const forumPostController = require('./controllers/forumPostController')
 
 // Authentication
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
@@ -161,24 +162,28 @@ app.get('/', function(req, res, next) {
   res.render('index',{title:"YellowCartwheel"});
 });
 
+
+app.get('/forum',forumPostController.getAllForumPosts)
+
+app.post('/forum',forumPostController.saveForumPost)
+
 app.get('/griddemo', function(req, res, next) {
   res.render('griddemo',{title:"Grid Demo"});
 });
 
+
+
+app.get('/bmidemo', (req, res) => {
+  res.render('bmidemo',{title:"Grid Demo"});
+});
+
+
+
+// myform demo ...
+
 app.get('/myform', function(req, res, next) {
   res.render('myform',{title:"Form Demo"});
 });
-
-
-app.use(function(req,res,next){
-  console.log("about to look for post routes!!!")
-  next()
-});
-
-function processFormData(req,res,next){
-  res.render('formdata',
-     {title:"Form Data",url:req.body.url, coms:req.body.theComments})
-}
 
 app.post('/processform', commentController.saveComment)
 
@@ -187,6 +192,13 @@ app.get('/showComments', commentController.getAllComments)
 // but here we are more direct
 
 app.get('/showComment/:id', commentController.getOneComment)
+
+function processFormData(req,res,next){
+  res.render('formdata',
+     {title:"Form Data",url:req.body.url, coms:req.body.theComments})
+}
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

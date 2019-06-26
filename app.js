@@ -162,6 +162,10 @@ app.get('/', function(req, res, next) {
   res.render('index',{title:"YellowCartwheel"});
 });
 
+app.get('/quiz2',(req,res)=> {
+  res.render('quiz2',{title:'Quiz2',ratings:[]})
+})
+
 
 app.get('/forum',forumPostController.getAllForumPosts)
 

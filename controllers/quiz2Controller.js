@@ -1,5 +1,5 @@
 'use strict';
-const movieRating = require( '../models/MovieRating' );
+const MovieRating = require( '../models/MovieRating' );
 
 
 
@@ -10,7 +10,7 @@ exports.getAllMovieRatings = ( req, res ) => {
     .exec()
     .then( ( ratings ) => {
       res.render( 'quiz2', {
-        title:"Quiz2",movieRatings:ratings
+        title:"Quiz2",ratings:ratings
       } );
     } )
     .catch( ( error ) => {

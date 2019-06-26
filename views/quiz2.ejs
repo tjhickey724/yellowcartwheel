@@ -30,11 +30,10 @@
     <ol>
       <% for(i = 0; i<ratings.length; i++){  %>
           <li>
-                <%= ratings[i].movieName %>
-                <br>
-                Rating:<%= ratings[i].rating %>
-                Review:<br>
-                <%= ratings[i].review %>
+                <b>    <%= ratings[i].movieName %> </b>
+                Rating:<%= ratings[i].rating %>    <br>
+                       <%= ratings[i].createdAt %> <br>
+                <i>    <%= ratings[i].review %>    </i>
           </li>
       <% } %>
       </ol>

@@ -24,7 +24,7 @@ db.once('open', function() {
 const commentController = require('./controllers/commentController')
 const profileController = require('./controllers/profileController')
 const forumPostController = require('./controllers/forumPostController')
-
+const quiz2Controller = require('./controllers/quiz2Controller')
 // Authentication
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 // here we set up authentication with passport
@@ -162,9 +162,7 @@ app.get('/', function(req, res, next) {
   res.render('index',{title:"YellowCartwheel"});
 });
 
-app.get('/quiz2',(req,res)=> {
-  res.render('quiz2',{title:'Quiz2',ratings:[]})
-})
+app.get('/quiz2',quiz2Controller.getAllMovieRatings)
 
 
 app.get('/forum',forumPostController.getAllForumPosts)

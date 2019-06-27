@@ -14,7 +14,7 @@ flash = require('connect-flash')
 // END OF AUTHENTICATION MODULES
 
 const mongoose = require( 'mongoose' );
-mongoose.connect( 'mongodb://localhost/mydb' );
+mongoose.connect( 'mongodb://localhost/mydb', { useNewUrlParser: true } );
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -51,7 +51,10 @@ app.use(express.static(path.join(__dirname, 'public')));
      HERE ARE THE AUTHENTICATION ROUTES
 **************************************************************************/
 
-app.use(session({ secret: 'zzbbyanana' }));
+app.use(session(
+  { secret: 'zzbbyanana',
+    resave: false,
+    saveUninitialized: false }));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());

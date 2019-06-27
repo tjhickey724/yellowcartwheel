@@ -1,8 +1,8 @@
 'use strict';
 const User = require( '../models/User' );
 const axios = require('axios');
-var apikey = require('../config/apikey');
-console.dir(apikey)
+//var apikey = require('../config/apikey');
+//console.dir(apikey)
 
 
 exports.update = ( req, res ) => {
@@ -15,32 +15,17 @@ exports.update = ( req, res ) => {
     p.userName = req.body.userName
     p.profilePicURL = req.body.profilePicURL
     p.zipcode = req.body.zipcode
-
-    // make a call to zicode server to look up the city and state
-    // and store them in the profile ....
-    axios.get("https://www.zipcodeapi.com/rest/"+apikey.apikey.zipcode+"/info.json/"+p.zipcode+"/degrees")
-      .then(function (response) {
-        // handle success
-        console.log(response);
-        console.dir(response);
-        p.city = response.data.city
-        p.state = response.data.state
-        p.lastUpdate = new Date()
-        p.save()
-        .then(() => {
-          res.redirect( '/profile' );
-        })
-
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .finally(function () {
-        // always executed
-      });
+    p.lastUpdate = new Date()
   })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .finally(function () {
+    // always executed
+  });
 };
+
 
 exports.getAllProfiles = ( req, res ) => {
   //gconsle.log('in getAllSkills')

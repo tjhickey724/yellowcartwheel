@@ -16,7 +16,13 @@ exports.update = ( req, res ) => {
     p.profilePicURL = req.body.profilePicURL
     p.zipcode = req.body.zipcode
     p.lastUpdate = new Date()
-  })
+    p.save()
+     .then( ( profile ) => {
+      res.render( 'showProfile', {
+          profile:profile, title:"Profile"
+        } );
+     })
+   })
   .catch(function (error) {
     // handle error
     console.log(error);

@@ -187,6 +187,12 @@ app.get('/showPost/:id',
         forumPostController.attachAllForumComments,
         forumPostController.showOnePost)
 
+app.get('/showPostComments/:id',
+        forumPostController.attachAllForumComments,
+        (req,res)=>{
+          res.render('forumPostComments',{title:"comments"})
+        })
+
 app.post('/saveForumComment',forumPostController.saveForumComment)
 
 

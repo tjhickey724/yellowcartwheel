@@ -19,21 +19,9 @@
        <input class="btn btn-sm btn-primary" type="submit" value="Add Comment">
    </form>
    <br><br><br>
-   <h2>Comments</h2>
-   <ol>
-   <% console.log("in forumPost.ejs with comments.length ="+comments.length) %>
-   <% for(i = 0; i<comments.length; i++){  %>
-       <li> <a href="/showComment/<%= comments[i]._id %>">
-             <%= comments[i].userName %></a>
-             <i>
-            <%= comments[i].createdAt %></\/i> <br>
-            <% if (comments[i].userId.equals(user._id)) { %>
-                <input type="checkbox" name="delete" value="<%= comments[i]._id %>">
-            <% } %>
-            <pre>...<%= comments[i].comment %></pre>
-        </li>
-   <% } %>
-   </ol>
+   <iframe src="/showPostComments/<%= post._id%>" height="200" width="100%"></iframe>
+
+
 
 
 <%- include('bootfooter') -%>

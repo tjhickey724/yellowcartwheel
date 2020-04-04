@@ -1,0 +1,185 @@
+<%- include('bootheader') -%>
+<%- include('menubarC19') -%>
+
+
+	<div class="jumbotron">
+    <h1>Latest Covid19 data for <%= state %></h2>
+		<p> This data is from an API provided by
+			<a href="https://covidtracking.com/">
+				https://covidtracking.com/ </a>
+				<br>
+				and was last updated  as of <%= dateChecked %>.
+				<br>
+				More details at <a href="/about">this link</a>
+				<br>
+				They just added the number of "hospitalized"
+				to the daily data on 3/22/2020.
+			</p>
+			<h2><a href="/">Back to main page</a></h2>
+  </div>
+
+	<div class="chart-container" style="position: relative; height:50vh">
+    <canvas id="canvas"></canvas>
+  </div>
+
+
+	<% if (yaxistype=='logarithmic') { %>
+		With a logarithmic plot, straight lines denote exponential growth!!<br>
+		We want to see straight lines for testing, but flatter line for positive and death!
+	<% } %>
+
+	<h2 style="margin-top:30px"> Pick another state to visualize </h2>
+	<form method="post" action="/us">
+		What scale do you want for the y-axis:
+		<% scales=['linear','logarithmic']
+		   for (i = 0; i<scales.length; i++){
+			   s = scales[i] %>
+		<input type="radio"
+					 name="yaxistype"
+					 value="<%= s %>"
+					 <% if (s==yaxistype) { %> checked <% } %>
+					 > <%= s %> &nbsp; &nbsp;
+		<% } %>
+		<br>
+		<hr>
+		<input
+				class="btn btn-lg btn-danger"
+				type="submit"
+				value="Show latest covid19 data">
+		<hr>
+    Which state are you interested in?
+		<input type="submit" name="state" value='US'
+		  <% if ('US'==state) { %> checked <% } %>
+		  >
+		The Entire US
+		<br>
+		or an individual state:
+		<br>
+
+
+
+			<% for (let i in states) {
+				let s = states[i] %>
+				<input type="submit" class="btn btn-sm btn-primary"
+				       name="state" value=<%=i %>
+				 <% if (s==state) {%> checked <% } %> >
+			<% } %>
+		<br><br>
+
+  </form>
+	<br><br><hr><br><br>
+	<h1>Here is the data for <%= state %> in tabular form</h1>
+	<% const datakeys = Object.keys(data[data.length-1]) %>
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<% for (i in datakeys) { %>
+					<td> <%= datakeys[i] %> </td>
+				<% } %>
+			</tr>
+		</thead>
+		<tbody>
+			<% for (i in data) {%>
+				<tr>
+					<% for (j in datakeys) { %>
+						<td>  <%= data[i][datakeys[j]] || '-'  %> </td>
+					<% } %>
+				</tr>
+			<% } %>
+
+		</tbody>
+	</table>
+
+	<br>
+	<br>
+
+	<script>
+		var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		var config = {
+			type: 'line',
+			data: {
+				labels: [<%= data.map((d)=>d['date']) %>],
+				datasets: [
+				{
+					label: 'Total',
+					fill: false,
+					backgroundColor: 'rgb(0,0,0)',
+					borderColor: 'rgb(0,0,0)',
+					data: [<%= data.map((d)=>d['total']) %>],
+				},
+
+				{
+					label: 'Positive',
+					backgroundColor: window.chartColors.blue,
+					borderColor: window.chartColors.blue,
+					data: [<%= data.map((d)=>d['positive']) %>],
+					fill: false,
+				},
+				{
+					label: 'Negative',
+					fill: false,
+					backgroundColor: window.chartColors.green,
+					borderColor: window.chartColors.green,
+					data: [<%= data.map((d)=>d['negative']) %>],
+				},
+				{
+					label: 'Hospitalized',
+					fill: false,
+					backgroundColor: window.chartColors.purple,
+					borderColor: window.chartColors.purple,
+					data: [<%= data.map((d)=>d['hospitalized']) %>],
+				},
+				{
+					label: 'Death',
+					fill: false,
+					backgroundColor: window.chartColors.red,
+					borderColor: window.chartColors.red,
+					data: [<%= data.map((d)=>d['death']) %>],
+				}
+
+			  ]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio:false,
+				title: {
+					display: true,
+					text: '<%= yaxistype %> plot of Latest Covid-19 data for <%= state %>'
+				},
+				tooltips: {
+					mode: 'index',
+					intersect: false,
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Date'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						type:'<%= yaxistype %>',
+						scaleLabel: {
+							display: true,
+							labelString: 'Value'
+						}
+					}]
+				}
+			}
+		};
+
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myLine = new Chart(ctx, config);
+		};
+</script>
+
+
+
+<%- include('bootfooter') -%>

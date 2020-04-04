@@ -3,6 +3,85 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var fs = require('fs')
+
+let statedata=[]
+try {
+  statedata = JSON.parse(fs.readFileSync('./private/statesdaily.json'))
+  console.log(statedata)
+} catch(err) {
+  console.log(err)
+}
+statedata.reverse()
+console.log('statedatalen = '+statedata.length)
+for (let i in statedata){
+  for (let j in statedata[i]){
+    if (statedata[i][j]==null){
+      statedata[i][j]=0
+    }
+  }
+}
+states = {
+    "AL": "Alabama",
+    "AK": "Alaska",
+    "AS": "American Samoa",
+    "AZ": "Arizona",
+    "AR": "Arkansas",
+    "CA": "California",
+    "CO": "Colorado",
+    "CT": "Connecticut",
+    "DE": "Delaware",
+    "DC": "District Of Columbia",
+    "FM": "Federated States Of Micronesia",
+    "FL": "Florida",
+    "GA": "Georgia",
+    "GU": "Guam",
+    "HI": "Hawaii",
+    "ID": "Idaho",
+    "IL": "Illinois",
+    "IN": "Indiana",
+    "IA": "Iowa",
+    "KS": "Kansas",
+    "KY": "Kentucky",
+    "LA": "Louisiana",
+    "ME": "Maine",
+    "MH": "Marshall Islands",
+    "MD": "Maryland",
+    "MA": "Massachusetts",
+    "MI": "Michigan",
+    "MN": "Minnesota",
+    "MS": "Mississippi",
+    "MO": "Missouri",
+    "MT": "Montana",
+    "NE": "Nebraska",
+    "NV": "Nevada",
+    "NH": "New Hampshire",
+    "NJ": "New Jersey",
+    "NM": "New Mexico",
+    "NY": "New York",
+    "NC": "North Carolina",
+    "ND": "North Dakota",
+    "MP": "Northern Mariana Islands",
+    "OH": "Ohio",
+    "OK": "Oklahoma",
+    "OR": "Oregon",
+    "PW": "Palau",
+    "PA": "Pennsylvania",
+    "PR": "Puerto Rico",
+    "RI": "Rhode Island",
+    "SC": "South Carolina",
+    "SD": "South Dakota",
+    "TN": "Tennessee",
+    "TX": "Texas",
+    "UT": "Utah",
+    "VT": "Vermont",
+    "VI": "Virgin Islands",
+    "VA": "Virginia",
+    "WA": "Washington",
+    "WV": "West Virginia",
+    "WI": "Wisconsin",
+    "WY": "Wyoming"
+}
 // require the socket.io module
 
 
@@ -170,6 +249,18 @@ app.use(function(req,res,next){
 app.get('/', function(req, res, next) {
   res.render('index',{title:"YellowCartwheel"});
 });
+
+app.use('/us',(req,res,next) =>{
+    state = req.body.state || 'MA'
+
+  res.render('us',
+        {data:statedata.filter(d=>(d.state==state)),
+         states:states,
+         state:state,
+         yaxistype: 'logarithmic',
+         dateChecked: '4/4/2020'
+            })
+})
 
 app.get('/chat',(req,res,next)=>{
   res.render('chat',{title:"ChatDemo"});

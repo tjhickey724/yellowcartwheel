@@ -1,6 +1,8 @@
 .DS_Store
 
 apikey.js
+*~
+private 
 
 # Logs
 logs

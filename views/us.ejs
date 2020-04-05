@@ -28,35 +28,32 @@
 		We want to see straight lines for testing, but flatter line for positive and death!
 	<% } %>
 
-	<h2 style="margin-top:30px"> Pick another state to visualize </h2>
 	<form method="post" action="/us">
-		What scale do you want for the y-axis:
-		<% scales=['linear','logarithmic']
-		   for (i = 0; i<scales.length; i++){
-			   s = scales[i] %>
-		<input type="radio"
-					 name="yaxistype"
-					 value="<%= s %>"
-					 <% if (s==yaxistype) { %> checked <% } %>
-					 > <%= s %> &nbsp; &nbsp;
-		<% } %>
-		<br>
-		<hr>
-		<input
-				class="btn btn-lg btn-danger"
-				type="submit"
-				value="Show latest covid19 data">
-		<hr>
-    Which state are you interested in?
-		<input type="submit" name="state" value='US'
-		  <% if ('US'==state) { %> checked <% } %>
-		  >
-		The Entire US
-		<br>
-		or an individual state:
-		<br>
+  <div class="row">
+		<div class="col">
+			<br><br>
+			<h2>Scale to use</h2>
+			<% scales=['linear','logarithmic']
+				 for (i = 0; i<scales.length; i++){
+					 s = scales[i] %>
+			<br><input type="radio"
+						 name="yaxistype"
+						 value="<%= s %>"
+						 <% if (s==yaxistype) { %> checked <% } %>
+						 > <%= s %> &nbsp; &nbsp;
+			<% } %>
+			<hr>
+	<h2>Fields to show</h2>
+	<% const datakeys = Object.keys(data[data.length-1]) %>
 
+	<% for (let i in datakeys){ let d = datakeys[i] %>
+		<br><input type="checkbox" name="keys" value="<%= d %>"> <%= d %>
+	<% } %>
 
+		</div>
+		<div class="col">
+			<br><br>
+	<h2> State to visualize </h2>
 
 			<% for (let i in states) {
 				let s = states[i] %>
@@ -64,12 +61,13 @@
 				       name="state" value=<%=i %>
 				 <% if (s==state) {%> checked <% } %> >
 			<% } %>
-		<br><br>
-
+		 <br><br>
+    </div>
+	 </div>
   </form>
 	<br><br><hr><br><br>
 	<h1>Here is the data for <%= state %> in tabular form</h1>
-	<% const datakeys = Object.keys(data[data.length-1]) %>
+
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
@@ -154,6 +152,12 @@
 					mode: 'nearest',
 					intersect: true
 				},
+				legend: {
+            display: true,
+            labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            }
+        },
 				scales: {
 					xAxes: [{
 						display: true,

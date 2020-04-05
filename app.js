@@ -7,7 +7,7 @@ var fs = require('fs')
 
 let statedata=[]
 try {
-  statedata = JSON.parse(fs.readFileSync('./private/statesdaily.json'))
+  statedata = (JSON.parse(fs.readFileSync('./private/statesdaily.json')))
   console.log(statedata)
 } catch(err) {
   console.log(err)
@@ -252,13 +252,17 @@ app.get('/', function(req, res, next) {
 
 app.use('/us',(req,res,next) =>{
     state = req.body.state || 'MA'
+    yaxistype = req.body.yaxistype || 'logarithmic'
+    datechecked = statedata[0]['datechecked'] || 'unknown'
+    data = statedata.filter(d=>(d.state==state))
+    data.pop()
 
   res.render('us',
-        {data:statedata.filter(d=>(d.state==state)),
+        {data:data,
          states:states,
          state:state,
-         yaxistype: 'logarithmic',
-         dateChecked: '4/4/2020'
+         yaxistype: yaxistype,
+         dateChecked: datechecked
             })
 })
 

@@ -21,7 +21,7 @@ for (let i in statedata){
     }
   }
 }
-states = {
+usstates = {
     "AL": "Alabama",
     "AK": "Alaska",
     "AS": "American Samoa",
@@ -251,16 +251,38 @@ app.get('/', function(req, res, next) {
 });
 
 app.use('/us',(req,res,next) =>{
-    state = req.body.state || 'MA'
+    states = req.body.state || 'MA'
+    if (typeof(states)=="string"){
+        states = [states]
+    }
     yaxistype = req.body.yaxistype || 'logarithmic'
+    fields = req.body.fields || ['death']
+    if (typeof(fields)=="string"){
+        fields = [fields]
+    }
     datechecked = statedata[0]['datechecked'] || 'unknown'
-    data = statedata.filter(d=>(d.state==state))
+    data = statedata.filter(d=>(d.state==states[0]))
     data.pop()
+    data2 = {}
+    for(let i=0; i<states.length; i++){
+        let s = states[i]
+        data2[s] = statedata.filter(d=>(d.state==s))
+        data2[s].pop()  // the last day is repeated for some reason
+    }
+    dates = data2[states[0]].map(d => d['date'])
+    console.dir(req.body)
+    console.dir(data2)
+    console.dir(fields)
+    console.dir(dates)
 
-  res.render('us',
+  res.render('us2',
         {data:data,
+         data2:data2,
+         fields:fields,
+         dates:dates,
+         usstates:usstates,
          states:states,
-         state:state,
+         state:states[0],
          yaxistype: yaxistype,
          dateChecked: datechecked
             })

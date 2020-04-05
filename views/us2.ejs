@@ -3,7 +3,7 @@
 
 
 	<div class="jumbotron">
-    <h1>Latest Covid19 data for <%= state %></h2>
+    <h1>Latest Covid19 data for <%= states %></h2>
 		<p> This data is from an API provided by
 			<a href="https://covidtracking.com/">
 				https://covidtracking.com/ </a>
@@ -48,7 +48,9 @@
 	<% const datakeys = Object.keys(data[data.length-1]) %>
 
 	<% for (let i in datakeys){ let d = datakeys[i] %>
-		<br><input type="checkbox" name="fields" value="<%= d %>"> <%= d %>
+		<br><input type="checkbox" name="fields"
+		     <% if (fields.includes(d)) {%> checked <% } %>
+		     value="<%= d %>"> <%= d %>
 	<% } %>
 
 		</div>
@@ -56,11 +58,11 @@
 			<br><br>
 	<h2> State to visualize </h2>
 
-			<% for (let i in states) {
-				let s = states[i] %>
+			<% for (let i in usstates) {
+				let s = usstates[i] %>
 				<br><input type="checkbox" class="btn btn-sm btn-primary"
 				       name="state" value=<%=i %>
-				 <% if (s==state) {%> checked <% } %> ><%= s %> <%= i %>
+				 <% if (states.includes(i)) {%> checked <% } %> ><%= s %> <%= i %>
 			<% } %>
 		 <br><br>
     </div>
@@ -97,44 +99,24 @@
 		var config = {
 			type: 'line',
 			data: {
-				labels: [<%= data.map((d)=>d['date']) %>],
+				labels: [<%= dates %>],
 				datasets: [
-				{
-					label: 'Total',
-					fill: false,
-					backgroundColor: 'rgb(0,0,0)',
-					borderColor: 'rgb(0,0,0)',
-					data: [<%= data.map((d)=>d['total']) %>],
-				},
 
-				{
-					label: 'Positive',
-					backgroundColor: window.chartColors.blue,
-					borderColor: window.chartColors.blue,
-					data: [<%= data.map((d)=>d['positive']) %>],
-					fill: false,
-				},
-				{
-					label: 'Negative',
-					fill: false,
-					backgroundColor: window.chartColors.green,
-					borderColor: window.chartColors.green,
-					data: [<%= data.map((d)=>d['negative']) %>],
-				},
-				{
-					label: 'Hospitalized',
-					fill: false,
-					backgroundColor: window.chartColors.purple,
-					borderColor: window.chartColors.purple,
-					data: [<%= data.map((d)=>d['hospitalized']) %>],
-				},
-				{
-					label: 'Death',
-					fill: false,
-					backgroundColor: window.chartColors.red,
-					borderColor: window.chartColors.red,
-					data: [<%= data.map((d)=>d['death']) %>],
-				}
+				<% for(let i=0; i<states.length;i++) {
+					   for(let j=0; j<fields.length; j++){
+							 let s = states[i]
+							 let f = fields[j]
+							 let c1 = '#'+Math.floor(Math.random()*15728640 +1048576).toString(16)
+
+							 %>
+							 {
+								 label:'<%= s %><%= f %>',
+								 fill: false,
+								 backgroundColor: '<%= c1 %>',
+								 borderColor: '<%= c1 %>',
+								 data: [<%= data2[s].map(d => d[f]||0) %>],
+							 },
+			  <% }} %>
 
 			  ]
 			},
@@ -143,7 +125,7 @@
 				maintainAspectRatio:false,
 				title: {
 					display: true,
-					text: '<%= yaxistype %> plot of Latest Covid-19 data for <%= state %>'
+					text: '<%= yaxistype %> plot of Latest Covid-19 data for <%= states %>'
 				},
 				tooltips: {
 					mode: 'index',

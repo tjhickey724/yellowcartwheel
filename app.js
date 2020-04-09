@@ -1,19 +1,32 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var fs = require('fs')
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const fs = require('fs')
+const axios = require('axios')
 
 let statedata=[]
 try {
   statedata = (JSON.parse(fs.readFileSync('./private/statesdaily.json')))
-  console.log(statedata)
+  //console.log(statedata)
 } catch(err) {
   console.log(err)
 }
 statedata.reverse()
-console.log('statedatalen = '+statedata.length)
+
+function getStateData(){
+    axios.get("https://covidtracking.com/api/v1/states/daily.json")
+      .then(r => {console.dir(typeof(r)); statedata = r['data']; statedata.reverse(); console.log('new data!')})
+      .catch(e => {console.log("error "+e)})
+      .finally(() => {console.log('finally: ')})
+}
+
+getStateData()
+lastStatedataTime = new Date()
+
+
+console.log('statedatalen = '+statedata.length )
 for (let i in statedata){
   for (let j in statedata[i]){
     if (statedata[i][j]==null){
@@ -251,6 +264,13 @@ app.get('/', function(req, res, next) {
 });
 
 app.use('/us',(req,res,next) =>{
+    const now = new Date()
+    let dt = (now - lastStatedataTime)/1000/60
+    if (dt > 5){ // check every 5 minute
+        console.log("getting new state data")
+        console.log("at time "+now)
+        getStateData()
+    }
     states = req.body.state || 'MA'
     if (typeof(states)=="string"){
         states = [states]
@@ -260,6 +280,8 @@ app.use('/us',(req,res,next) =>{
     if (typeof(fields)=="string"){
         fields = [fields]
     }
+    //console.log('statedata=')
+    //console.dir(statedata)
     datechecked = statedata[0]['datechecked'] || 'unknown'
     data = statedata.filter(d=>(d.state==states[0]))
     data.pop()
@@ -270,10 +292,10 @@ app.use('/us',(req,res,next) =>{
         data2[s].pop()  // the last day is repeated for some reason
     }
     dates = data2[states[0]].map(d => d['date'])
-    console.dir(req.body)
-    console.dir(data2)
-    console.dir(fields)
-    console.dir(dates)
+    //console.dir(req.body)
+    //console.dir(data2)
+    //console.dir(fields)
+    //console.dir(dates)
 
   res.render('us2',
         {data:data,

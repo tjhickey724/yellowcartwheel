@@ -289,7 +289,7 @@ app.use('/us',(req,res,next) =>{
     for(let i=0; i<states.length; i++){
         let s = states[i]
         data2[s] = statedata.filter(d=>(d.state==s))
-        data2[s].pop()  // the last day is repeated for some reason
+        //data2[s].pop()  // the last day is repeated for some reason
     }
     dates = data2[states[0]].map(d => d['date'])
     //console.dir(req.body)

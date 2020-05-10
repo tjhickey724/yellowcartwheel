@@ -101,8 +101,6 @@
 		  for (i in nums) {
 		        z.push(nums.slice(Math.max(i-6,0),parseInt(i)+1).reduce((t,n) => t+n)/7)
 		  }
-		  console.log(`...nums=${JSON.stringify(nums,2)}`)
-		  console.log(`z=${z}`)
 		  return z
 		} %>
 		var config = {

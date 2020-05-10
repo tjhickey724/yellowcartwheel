@@ -260,7 +260,8 @@ app.use(function(req,res,next){
 
 
 app.get('/', function(req, res, next) {
-  res.render('index',{title:"YellowCartwheel"});
+  //res.render('index',{title:"YellowCartwheel"});
+  res.redirect('/us')
 });
 
 app.use('/us',(req,res,next) =>{
@@ -275,8 +276,8 @@ app.use('/us',(req,res,next) =>{
     if (typeof(states)=="string"){
         states = [states]
     }
-    yaxistype = req.body.yaxistype || 'logarithmic'
-    fields = req.body.fields || ['death']
+    yaxistype = req.body.yaxistype || 'linear'
+    fields = req.body.fields || ['positiveIncrease']
     if (typeof(fields)=="string"){
         fields = [fields]
     }
@@ -290,7 +291,6 @@ app.use('/us',(req,res,next) =>{
     for(let i=0; i<states.length; i++){
         let s = states[i]
         data2[s] = statedata.filter(d=>(d.state==s))
-        data3[s] = weeklyaverage(data2[s])
         //data2[s].pop()  // the last day is repeated for some reason
     }
     dates = data2[states[0]].map(d => d['date'])
@@ -318,8 +318,6 @@ function weeklyaverage(nums) {
   for (i in nums) {
         z.push(nums.slice(Math.max(i-6,0),parseInt(i)+1).reduce((t,n) => t+n)/7)
   }
-  console.log(`...nums=${JSON.stringify(nums,2)}`)
-  console.log(`z=${z}`)
   return z
 }
 

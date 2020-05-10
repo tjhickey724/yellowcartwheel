@@ -96,6 +96,15 @@
 
 	<script>
 		var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		<% function weeklyaverage(nums) {
+		  z=[]
+		  for (i in nums) {
+		        z.push(nums.slice(Math.max(i-6,0),parseInt(i)+1).reduce((t,n) => t+n)/7)
+		  }
+		  console.log(`...nums=${JSON.stringify(nums,2)}`)
+		  console.log(`z=${z}`)
+		  return z
+		} %>
 		var config = {
 			type: 'line',
 			data: {
@@ -107,7 +116,8 @@
 							 let s = states[i]
 							 let f = fields[j]
 							 let c1 = '#'+Math.floor(Math.random()*15728640 +1048576).toString(16)
-
+							 nums = data2[s].map((x)=>x[f]||0)
+							 wnums = weeklyaverage(nums)
 							 %>
 							 {
 								 label:'<%= s %><%= f %>',
@@ -115,6 +125,14 @@
 								 backgroundColor: '<%= c1 %>',
 								 borderColor: '<%= c1 %>',
 								 data: [<%= data2[s].map(d => d[f]||0) %>],
+							 },
+							 {
+								 label:'<%= s %><%= f %> weekly average',
+								 fill: false,
+								 backgroundColor: '<%= c1 %>',
+								 borderColor: '<%= c1 %>',
+								 borderDash: [5, 5],
+								 data: [<%= wnums %>],
 							 },
 			  <% }} %>
 

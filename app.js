@@ -286,9 +286,11 @@ app.use('/us',(req,res,next) =>{
     data = statedata.filter(d=>(d.state==states[0]))
     data.pop()
     data2 = {}
+    data3 = {}
     for(let i=0; i<states.length; i++){
         let s = states[i]
         data2[s] = statedata.filter(d=>(d.state==s))
+        data3[s] = weeklyaverage(data2[s])
         //data2[s].pop()  // the last day is repeated for some reason
     }
     dates = data2[states[0]].map(d => d['date'])
@@ -300,6 +302,7 @@ app.use('/us',(req,res,next) =>{
   res.render('us2',
         {data:data,
          data2:data2,
+         data3:data3,
          fields:fields,
          dates:dates,
          usstates:usstates,
@@ -309,6 +312,16 @@ app.use('/us',(req,res,next) =>{
          dateChecked: datechecked
             })
 })
+
+function weeklyaverage(nums) {
+  z=[]
+  for (i in nums) {
+        z.push(nums.slice(Math.max(i-6,0),parseInt(i)+1).reduce((t,n) => t+n)/7)
+  }
+  console.log(`...nums=${JSON.stringify(nums,2)}`)
+  console.log(`z=${z}`)
+  return z
+}
 
 app.get('/chat',(req,res,next)=>{
   res.render('chat',{title:"ChatDemo"});

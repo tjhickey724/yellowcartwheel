@@ -109,7 +109,7 @@ flash = require('connect-flash')
 
 const mongoose = require( 'mongoose' );
 
-mongoose.connect( 'mongodb://localhost/mydb', { useNewUrlParser: true } );
+mongoose.connect( 'mongodb://localhost/mycoviddb', { useNewUrlParser: true } );
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {

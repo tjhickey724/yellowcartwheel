@@ -1,0 +1,3 @@
+Start the mongodb server using
+      mongod --dbpath=/Users/tim/data/db
+on the new MacOS

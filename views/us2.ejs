@@ -8,7 +8,7 @@
 			<a href="https://covidtracking.com/">
 				https://covidtracking.com/ </a>
 				<br>
-				and was last updated  as of <%= dateChecked %>.
+				and was last updated  as of <%= dateChecked %>
 				<br>
 				More details at <a href="/about">this link</a>
 				<br>
@@ -131,7 +131,11 @@
 							 let s = states[i]
 
 							 let f = fields[j]
-							 let c1 = '#'+Math.floor(Math.random()*15728640 +1048576).toString(16)
+							 let c0 = Math.floor(Math.random()*15728640 +1048576)
+							 let c0a = Math.floor((2**24+c0)/2)
+							 let c1 = '#'+c0.toString(16)
+							 let c1a = '#' + c1[1]+'f'+c1[3]+'f'+c1[5]+'f'
+							 console.log(`c1=${c1} c1a=${c1a}`)
 							 nums = data2[s].map((x)=>(x[f]||0)/pop)
 							 console.log(JSON.stringify(nums))
 							 wnums = weeklyaverage(nums)
@@ -139,8 +143,9 @@
 							 {
 								 label:'<%= s %><%= f %>',
 								 fill: false,
-								 backgroundColor: '<%= c1 %>',
-								 borderColor: '<%= c1 %>',
+								 backgroundColor: '<%= c1a %>',
+								 borderColor: '<%= c1a %>',
+								 borderDash: [5, 5],
 								 data: [<%= data2[s].map(d => (d[f]||0)/pop) %>],
 							 },
 							 {
@@ -148,7 +153,7 @@
 								 fill: false,
 								 backgroundColor: '<%= c1 %>',
 								 borderColor: '<%= c1 %>',
-								 borderDash: [5, 5],
+
 								 data: [<%= wnums %>],
 							 },
 			  <% }} %>

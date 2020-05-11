@@ -15,6 +15,33 @@ try {
 }
 statedata.reverse()
 
+
+let popdata=[]
+try {
+  popdata = (JSON.parse(fs.readFileSync('./private/states.json')))
+  //console.log(statedata)
+  popdata = popdata["data"]
+} catch(err) {
+  console.log(err)
+}
+
+statepop={}
+for (let i=0; i<popdata.length; i++){
+    let d = popdata[i]
+    let s = d["State"]
+    let p = d["Pop"]
+    //console.log("i="+i)
+    //console.log(JSON.stringify(d))
+    //console.log(s)
+    //console.log(p)
+    statepop[s]= p
+}
+
+console.log(JSON.stringify(popdata,2))
+console.log("===== statepop ======")
+console.log(JSON.stringify(statepop,2))
+console.log("**********")
+
 function getStateData(){
     axios.get("https://covidtracking.com/api/v1/states/daily.json")
       .then(r => {console.dir(typeof(r)); statedata = r['data']; statedata.reverse(); console.log('new data!')})
@@ -277,6 +304,7 @@ app.use('/us',(req,res,next) =>{
         states = [states]
     }
     yaxistype = req.body.yaxistype || 'linear'
+    units = req.body.units || 'per10000'
     fields = req.body.fields || ['positiveIncrease']
     if (typeof(fields)=="string"){
         fields = [fields]
@@ -299,6 +327,7 @@ app.use('/us',(req,res,next) =>{
     //console.dir(fields)
     //console.dir(dates)
 
+
   res.render('us2',
         {data:data,
          data2:data2,
@@ -307,9 +336,11 @@ app.use('/us',(req,res,next) =>{
          dates:dates,
          usstates:usstates,
          states:states,
+         statepop:statepop,
          state:states[0],
          yaxistype: yaxistype,
-         dateChecked: datechecked
+         dateChecked: datechecked,
+         units:units
             })
 })
 

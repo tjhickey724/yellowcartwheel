@@ -44,6 +44,17 @@
 						 > <%= s %> &nbsp; &nbsp;
 			<% } %>
 			<hr>
+			<h2>Units to use</h2>
+			<% scales=['raw','per10000']
+				 for (i = 0; i<scales.length; i++){
+					 s = scales[i] %>
+			<br><input type="radio"
+						 name="units"
+						 value="<%= s %>"
+						 <% if (s==units) { %> checked <% } %>
+						 > <%= s %> &nbsp; &nbsp;
+			<% } %>
+			<hr>
 	<h2>Fields to show</h2>
 	<% const datakeys = Object.keys(data[data.length-1]) %>
 
@@ -109,12 +120,20 @@
 				labels: [<%= dates %>],
 				datasets: [
 
-				<% for(let i=0; i<states.length;i++) {
+				<% console.log(JSON.stringify(statepop))
+				    for(let i=0; i<states.length;i++) {
+						 let pop = statepop[usstates[states[i]]]/10000
+						 if (units=='raw'){
+							 pop=1
+						 }
+					   console.log("pop of "+usstates[states[i]]+" is "+pop)
 					   for(let j=0; j<fields.length; j++){
 							 let s = states[i]
+
 							 let f = fields[j]
 							 let c1 = '#'+Math.floor(Math.random()*15728640 +1048576).toString(16)
-							 nums = data2[s].map((x)=>x[f]||0)
+							 nums = data2[s].map((x)=>(x[f]||0)/pop)
+							 console.log(JSON.stringify(nums))
 							 wnums = weeklyaverage(nums)
 							 %>
 							 {
@@ -122,7 +141,7 @@
 								 fill: false,
 								 backgroundColor: '<%= c1 %>',
 								 borderColor: '<%= c1 %>',
-								 data: [<%= data2[s].map(d => d[f]||0) %>],
+								 data: [<%= data2[s].map(d => (d[f]||0)/pop) %>],
 							 },
 							 {
 								 label:'<%= s %><%= f %> weekly average',
@@ -141,7 +160,7 @@
 				maintainAspectRatio:false,
 				title: {
 					display: true,
-					text: '<%= yaxistype %> plot of Latest Covid-19 data for <%= states %>'
+					text: '<%= yaxistype %> plot of Latest Covid-19 data for <%= states %> with <%= units %> data'
 				},
 				tooltips: {
 					mode: 'index',
@@ -170,7 +189,7 @@
 						type:'<%= yaxistype %>',
 						scaleLabel: {
 							display: true,
-							labelString: 'Value'
+							labelString: `Value `+'<%= units %>'
 						}
 					}]
 				}

@@ -325,10 +325,17 @@ app.use('/us',(req,res,next) =>{
         //data2[s].pop()  // the last day is repeated for some reason
     }
 
+    for(let i=0; i<states.length; i++){
+        let s = states[i]
+        data2[s] = data2[s].slice(data2[s].length-minsize)
+    }
+
+
 
     dates = data2[states[0]].map(d => d['date'])
     dates = dates.slice(dates.length-minsize)
     data = data.slice(data.length-minsize)
+
     //console.dir(req.body)
     //console.dir(data2)
     //console.dir(fields)

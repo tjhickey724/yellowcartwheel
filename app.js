@@ -316,12 +316,19 @@ app.use('/us',(req,res,next) =>{
     data.pop()
     data2 = {}
     data3 = {}
+
+    let minsize=10000000
     for(let i=0; i<states.length; i++){
         let s = states[i]
         data2[s] = statedata.filter(d=>(d.state==s))
+        minsize = Math.min(data2[s].length,minsize)
         //data2[s].pop()  // the last day is repeated for some reason
     }
+
+
     dates = data2[states[0]].map(d => d['date'])
+    dates = dates.slice(dates.length-minsize)
+    data = data.slice(data.length-minsize)
     //console.dir(req.body)
     //console.dir(data2)
     //console.dir(fields)
@@ -331,7 +338,6 @@ app.use('/us',(req,res,next) =>{
   res.render('us2',
         {data:data,
          data2:data2,
-         data3:data3,
          fields:fields,
          dates:dates,
          usstates:usstates,

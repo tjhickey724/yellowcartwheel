@@ -106,6 +106,10 @@
 	<br>
 
 	<script>
+		<%
+
+	%>
+
 		var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 		<% function weeklyaverage(nums) {
 		  z=[]
@@ -113,14 +117,47 @@
 		        z.push(nums.slice(Math.max(i-6,0),parseInt(i)+1).reduce((t,n) => t+n)/7)
 		  }
 		  return z
-		} %>
+		}
+		class RandomColor {
+			constructor(){
+				this.r = Math.random()
+				this.g = Math.random()
+				this.b = Math.random()
+				this.s=1
+				this.r = this.r/this.s
+				this.g = this.g/this.s
+				this.b = this.b/this.s
+			}
+
+			changeSaturation(s){
+				let s0 = (this.r+this.g+this.b)
+				let s1 = (s-1)/(s0-3)
+				this.r = ((1-s1)+ s1*this.r)
+				this.g = ((1-s1)+ s1*this.g)
+				this.b = ((1-s1)+ s1*this.b)
+				return this
+			}
+
+			toHex2(x){
+				return(x.toString(16))
+			}
+
+			toHex(){
+				let r0 = this.toHex2(Math.min(255,Math.floor(this.r*256)))
+				let g0 = this.toHex2(Math.min(255,Math.floor(this.g*256)))
+				let b0 = this.toHex2(Math.min(255,Math.floor(this.b*256)))
+				return "#"+r0+g0+b0
+			}
+		}
+
+		%>
 		var config = {
 			type: 'line',
 			data: {
 				labels: [<%= dates %>],
 				datasets: [
 
-				<% console.log(JSON.stringify(statepop))
+				<% //console.log(JSON.stringify(statepop))
 				    for(let i=0; i<states.length;i++) {
 						 let pop = statepop[usstates[states[i]]]/10000
 						 if (units=='raw'){
@@ -131,13 +168,28 @@
 							 let s = states[i]
 
 							 let f = fields[j]
-							 let c0 = Math.floor(Math.random()*15728640 +1048576)
-							 let c0a = Math.floor((2**24+c0)/2)
-							 let c1 = '#'+c0.toString(16)
-							 let c1a = '#' + c1[1]+'f'+c1[3]+'f'+c1[5]+'f'
+							 let c0 = (new RandomColor()).changeSaturation(0.5)
+					 		let c1 = c0.toHex()
+					 		let c0a = c0.changeSaturation(0.8)
+					 		let c1a = c0a.toHex()
+					 		console.log(`c1=${c1} c1a=${c1a}`)
+							/*
+							 c0 = Math.floor(Math.random()*15728640 +1048576)
+							 c0a = Math.floor((2**24+c0)/2)
+							 c1 = '#'+c0.toString(16)
+							 c1a = '#' + c1[1]+'f'+c1[3]+'f'+c1[5]+'f'
 							 console.log(`c1=${c1} c1a=${c1a}`)
+							 */
+							 /*
+							 c0 = (new RandomColor()).changeSaturation(0.5)
+							 c1 = c0.toHex()
+							 c0a = c0.changeSaturation(0.8)
+							 c1a = c0a.toHex()
+							 console.log(`c1=${c1} c1a=${c1a}`)
+							 */
+
 							 nums = data2[s].map((x)=>(x[f]||0)/pop)
-							 console.log(JSON.stringify(nums))
+							 //console.log(JSON.stringify(nums))
 							 wnums = weeklyaverage(nums)
 							 %>
 							 {
@@ -145,6 +197,7 @@
 								 fill: false,
 								 backgroundColor: '<%= c1a %>',
 								 borderColor: '<%= c1a %>',
+								 pointRadius: 0,
 								 borderDash: [5, 5],
 								 data: [<%= data2[s].map(d => (d[f]||0)/pop) %>],
 							 },
@@ -153,6 +206,7 @@
 								 fill: false,
 								 backgroundColor: '<%= c1 %>',
 								 borderColor: '<%= c1 %>',
+								 pointRadius:0,
 
 								 data: [<%= wnums %>],
 							 },

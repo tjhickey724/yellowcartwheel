@@ -303,6 +303,9 @@ app.use('/us',(req,res,next) =>{
     if (typeof(states)=="string"){
         states = [states]
     }
+    weekly = req.body.weekly
+    res.locals.weekly = weekly
+    console.log(`weekly=${weekly}`)
     yaxistype = req.body.yaxistype || 'linear'
     units = req.body.units || 'per10000'
     fields = req.body.fields || ['positiveIncrease']

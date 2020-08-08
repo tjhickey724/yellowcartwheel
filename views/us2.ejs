@@ -55,6 +55,15 @@
 						 > <%= s %> &nbsp; &nbsp;
 			<% } %>
 			<hr>
+			<h2>WeeklyAverage or Daily or both</h2>
+
+			<br><input type="checkbox"
+						 name="weekly"
+						 value="weekly"
+						 <% if (weekly) { %> checked <% } %>
+						 > Show weekly averages only &nbsp; &nbsp;
+
+			<hr>
 	<h2>Fields to show</h2>
 	<% const datakeys = Object.keys(data[data.length-1]) %>
 
@@ -192,6 +201,7 @@
 							 //console.log(JSON.stringify(nums))
 							 wnums = weeklyaverage(nums)
 							 %>
+							 <% if (!weekly) { %>
 							 {
 								 label:'<%= s %><%= f %>',
 								 fill: false,
@@ -201,6 +211,7 @@
 								 borderDash: [5, 5],
 								 data: [<%= data2[s].map(d => (d[f]||0)/pop) %>],
 							 },
+							 <% } %>
 							 {
 								 label:'<%= s %><%= f %> weekly average',
 								 fill: false,
@@ -219,7 +230,7 @@
 				maintainAspectRatio:false,
 				title: {
 					display: true,
-					text: '<%= yaxistype %> plot of Latest Covid-19 data for <%= states %> with <%= units %> data'
+					text: '<%= yaxistype %> plot of Latest Covid-19 data for <%= states %> with <%= units %> data <%= weekly?"with weekly averages only":"" %>'
 				},
 				tooltips: {
 					mode: 'index',

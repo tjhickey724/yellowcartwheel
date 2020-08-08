@@ -143,10 +143,10 @@ db.once('open', function() {
   console.log("we are connected!!!")
 });
 
-const commentController = require('./controllers/commentController')
+
+// We are set up to allow user to log in and setup favorites
 const profileController = require('./controllers/profileController')
-const forumPostController = require('./controllers/forumPostController')
-const quiz2Controller = require('./controllers/quiz2Controller')
+
 // Authentication
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 // here we set up authentication with passport
@@ -369,66 +369,6 @@ function weeklyaverage(nums) {
   }
   return z
 }
-
-app.get('/chat',(req,res,next)=>{
-  res.render('chat',{title:"ChatDemo"});
-})
-
-app.get('/quiz2',quiz2Controller.getAllMovieRatings)
-
-
-app.get('/forum',forumPostController.getAllForumPosts)
-
-app.post('/forum',forumPostController.saveForumPost)
-
-app.post('/forumDelete',forumPostController.deleteForumPost)
-
-app.get('/showPost/:id',
-        forumPostController.attachAllForumComments,
-        forumPostController.showOnePost)
-
-app.get('/showPostComments/:id',
-        forumPostController.attachAllForumComments,
-        (req,res)=>{
-          res.render('forumPostComments',{title:"comments"})
-        })
-
-app.post('/saveForumComment',forumPostController.saveForumComment)
-
-
-
-
-app.get('/griddemo', function(req, res, next) {
-  res.render('griddemo',{title:"Grid Demo"});
-});
-
-
-
-app.get('/bmidemo', (req, res) => {
-  res.render('bmidemo',{title:"BMI Demo"});
-});
-
-
-
-// myform demo ...
-
-app.get('/myform', function(req, res, next) {
-  res.render('myform',{title:"Form Demo"});
-});
-
-app.post('/processform', commentController.saveComment)
-
-app.get('/showComments', commentController.getAllComments)
-// app.use('/', indexRouter);  // this is how we use a router to handle the / path
-// but here we are more direct
-
-app.get('/showComment/:id', commentController.getOneComment)
-
-function processFormData(req,res,next){
-  res.render('formdata',
-     {title:"Form Data",url:req.body.url, coms:req.body.theComments})
-}
-
 
 
 // catch 404 and forward to error handler

@@ -303,9 +303,10 @@ app.use('/us',(req,res,next) =>{
     if (typeof(states)=="string"){
         states = [states]
     }
-    weekly = req.body.weekly
-    res.locals.weekly = weekly
-    console.log(`weekly=${weekly}`)
+    daily = req.body.daily
+    showData = req.body.showData
+    res.locals.daily = daily
+    console.log(`daily=${daily}`)
     yaxistype = req.body.yaxistype || 'linear'
     units = req.body.units || 'per10000'
     fields = req.body.fields || ['positiveIncrease']
@@ -348,6 +349,7 @@ app.use('/us',(req,res,next) =>{
   res.render('us2',
         {data:data,
          data2:data2,
+         showData:showData,
          fields:fields,
          dates:dates,
          usstates:usstates,

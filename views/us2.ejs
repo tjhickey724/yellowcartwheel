@@ -3,7 +3,7 @@
 
 
 	<div class="jumbotron">
-    <h1>Latest Covid19 data for <%= states %></h2>
+    <h1>Latest Covid19 data for <%= states %></h1>
 		<p> This data is from an API provided by
 			<a href="https://covidtracking.com/">
 				https://covidtracking.com/ </a>
@@ -22,29 +22,73 @@
     <canvas id="canvas"></canvas>
   </div>
 
-
-	<% if (yaxistype=='logarithmic') { %>
-		With a logarithmic plot, straight lines denote exponential growth!!<br>
-		We want to see straight lines for testing, but flatter line for positive and death!
-	<% } %>
-
 	<form method="post" action="/us">
-		<input class="btn btn-lg btn-primary" type="submit">
+		<input class="btn btn-lg btn-danger" type="submit">
+
+	<div class="row">
+		<div class="col">
+			<h2> State to visualize </h2>
+			<div class="btn-group-toggle" data-toggle="buttons">
+
+				<% for (let i in usstates) {
+					let s = usstates[i] %>
+						<label class="btn btn-small btn-primary <% if (states.includes(i)) {%> active <% } %>">
+							<br><input type="checkbox" 
+										 name="state" value=<%=i %> autocomplete="off"
+							 <% if (states.includes(i)) {%> checked <% } %> > <%= i %>
+						 </label>
+					<% } %>
+			</div>
+		</div>
+
+		<div class="col">
+			<h2>Fields to show</h2>
+			<% keysToIgnore="date state checkTimeEt dateChecked dateModified fips hash lastUpdateEt commercialScore grade dataQualityGrade positiveScore negativeRegularScore negativeScore score pending"
+			%>
+			<% const datakeys = Object.keys(data[data.length-1]) %>
+
+			<div class="btn-group-toggle" data-toggle="buttons">
+
+				<% for (let i in datakeys.sort()){
+					   let d = datakeys[i]
+						 if (keysToIgnore.includes(d)){continue}
+						 %>
+					<label class="btn btn-small btn-info <% if (fields.includes(d)) {%> active <% } %>">
+
+						<input type="checkbox" name="fields"
+
+						     <% if (fields.includes(d)) {%> checked <% } %>
+						     value="<%= d %>"> <%= d %>
+					</label>
+				<% } %>
+			</div>
+		</div>
+	</div>
+
+
+
+<br><hr><br>
+
   <div class="row">
 		<div class="col">
-			<br><br>
-			<h2>Scale to use</h2>
+			<h6>Scale to use</h6>
 			<% scales=['linear','logarithmic']
 				 for (i = 0; i<scales.length; i++){
 					 s = scales[i] %>
-			<br><input type="radio"
+					 <br><input type="radio"
 						 name="yaxistype"
 						 value="<%= s %>"
 						 <% if (s==yaxistype) { %> checked <% } %>
 						 > <%= s %> &nbsp; &nbsp;
 			<% } %>
-			<hr>
-			<h2>Units to use</h2>
+			<% if (yaxistype=='logarithmic') { %>
+				With a logarithmic plot, straight lines denote exponential growth!!<br>
+				We want to see straight lines for testing, but flatter line for positive and death!
+			<% } %>
+		</div>
+
+		<div class="col">
+			<h6>Units to use</h6>
 			<% scales=['raw','per10000']
 				 for (i = 0; i<scales.length; i++){
 					 s = scales[i] %>
@@ -54,43 +98,26 @@
 						 <% if (s==units) { %> checked <% } %>
 						 > <%= s %> &nbsp; &nbsp;
 			<% } %>
-			<hr>
-			<h2>WeeklyAverage or Daily or both</h2>
-
-			<br><input type="checkbox"
-						 name="weekly"
-						 value="weekly"
-						 <% if (weekly) { %> checked <% } %>
-						 > Show weekly averages only &nbsp; &nbsp;
-
-			<hr>
-	<h2>Fields to show</h2>
-	<% const datakeys = Object.keys(data[data.length-1]) %>
-
-	<% for (let i in datakeys){ let d = datakeys[i] %>
-		<br><input type="checkbox" name="fields"
-		     <% if (fields.includes(d)) {%> checked <% } %>
-		     value="<%= d %>"> <%= d %>
-	<% } %>
-
 		</div>
 		<div class="col">
-			<br><br>
-	<h2> State to visualize </h2>
+			<h6>WeeklyAverage or Daily or both</h6>
 
-			<% for (let i in usstates) {
-				let s = usstates[i] %>
-				<br><input type="checkbox" class="btn btn-sm btn-primary"
-				       name="state" value=<%=i %>
-				 <% if (states.includes(i)) {%> checked <% } %> ><%= s %> <%= i %>
-			<% } %>
-		 <br><br>
-    </div>
-	 </div>
+			<br><input type="checkbox"
+						 name="daily"
+						 value="daily"
+						 <% if (daily) { %> checked <% } %>
+						 > Show daily values and weekly averages &nbsp; &nbsp;
+		</div>
+	</div>
+
   </form>
-	<br><br><hr><br><br>
-	<h1>Here is the data for <%= state %> in tabular form</h1>
+	<div>
 
+<% if (showData) {%>
+
+	<% for (theState in data2){
+		  let stateData = data2[theState] %>
+<h1>Here is the data for <%= theState %> in tabular form</h1>
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
@@ -100,10 +127,10 @@
 			</tr>
 		</thead>
 		<tbody>
-			<% for (i in data) {%>
+			<% for (i in stateData) {%>
 				<tr>
 					<% for (j in datakeys) { %>
-						<td>  <%= data[i][datakeys[j]] || '-'  %> </td>
+						<td>  <%= stateData[i][datakeys[j]] || '-'  %> </td>
 					<% } %>
 				</tr>
 			<% } %>
@@ -111,6 +138,10 @@
 		</tbody>
 	</table>
 
+	<% } %>
+	</div>
+
+	<% } %>
 	<br>
 	<br>
 
@@ -201,7 +232,7 @@
 							 //console.log(JSON.stringify(nums))
 							 wnums = weeklyaverage(nums)
 							 %>
-							 <% if (!weekly) { %>
+							 <% if (daily) { %>
 							 {
 								 label:'<%= s %><%= f %>',
 								 fill: false,
@@ -230,7 +261,7 @@
 				maintainAspectRatio:false,
 				title: {
 					display: true,
-					text: '<%= yaxistype %> plot of Latest Covid-19 data for <%= states %> with <%= units %> data <%= weekly?"with weekly averages only":"" %>'
+					text: '<%= yaxistype %> plot of Latest Covid-19 data for <%= states %> with <%= units %> data <%= daily?"with daily data and":"" %>  weekly averages'
 				},
 				tooltips: {
 					mode: 'index',

@@ -7,15 +7,7 @@
 		<p> This data is from an API provided by
 			<a href="https://covidtracking.com/">
 				https://covidtracking.com/ </a>
-				<br>
-				and was last updated  as of <%= dateChecked %>
-				<br>
-				More details at <a href="/about">this link</a>
-				<br>
-				They just added the number of "hospitalized"
-				to the daily data on 3/22/2020.
 			</p>
-			<h2><a href="/">Back to main page</a></h2>
   </div>
 
 	<div class="chart-container" style="position: relative; height:90vh">
@@ -33,7 +25,7 @@
 				<% for (let i in usstates) {
 					let s = usstates[i] %>
 						<label class="btn btn-small btn-primary <% if (states.includes(i)) {%> active <% } %>">
-							<br><input type="checkbox" 
+							<br><input type="checkbox"
 										 name="state" value=<%=i %> autocomplete="off"
 							 <% if (states.includes(i)) {%> checked <% } %> > <%= i %>
 						 </label>
